@@ -11,17 +11,17 @@ entity contador is
 end contador;
 
 architecture cont_arch of contador is
-signal contador: std_logic_vector(6 downto 0) := (others => '0');  
+signal contador: std_logic_vector(27 downto 0) := (others => '0');  
  
 begin
     process(CLOCK_50)
     begin
 		  if comecaContagem = '0' then
-				contador <= "0000000";
+				contador <= x"0000000";
 		
         elsif CLOCK_50'event and CLOCK_50 = '1' and comecaContagem = '1' then
 			contador <= contador + 1;
-            if contador = x"5F5E0FF" then
+            if contador = x"000000A" then
                 CONTO2SEG <= '1';
             else
                 CONTO2SEG <= '0';            
