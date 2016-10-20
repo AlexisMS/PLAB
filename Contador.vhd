@@ -21,7 +21,7 @@ begin
 		
         elsif CLOCK_50'event and CLOCK_50 = '1' and comecaContagem = '1' then
 			contador <= contador + 1;
-            if contador > x"000000A" then
+            if contador > x"5F5E0FF" then
                 CONTO2SEG <= '1';
             else
                 CONTO2SEG <= '0';            
