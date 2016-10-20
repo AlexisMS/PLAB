@@ -10,7 +10,9 @@ entity Bloco_Controle is
 		reset: in std_logic;
 		envia_sinal: out std_logic;
 		recebe_sinal: out std_logic;
-		resetDoContador: out std_logic
+		resetDoContador: out std_logic;
+		estado_recebe: out std_logic;
+		estado_envia: out std_logic
 		);
 end entity;
 
@@ -25,6 +27,8 @@ begin
 	nextState <= actualState;
 	case actualState is
 		when INICIO =>
+			estado_envia <= '1';
+			estado_recebe <= '0';
 			if btn = '1' then
 				nextState <= INSTRUCAO;
 			end if;
@@ -35,8 +39,12 @@ begin
 				nextState <= RECEBE;
 			end if;
 		when ENVIA =>
-			nextState <= INICIO;
+			if recebeu = '1' then
+				nextState <= INICIO;
+			end if;
 		when RECEBE =>
+			estado_envia <= '0';
+			estado_recebe <= '1';
 			if recebeu = '1' then
 				nextState <= INICIO;
 			end if;

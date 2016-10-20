@@ -6,7 +6,7 @@ entity PLAB is
 		KEY : in std_logic_vector(2 downto 0);
 		CLOCK_50: in std_logic;
 		SW : in std_logic_vector(0 downto 0);
-		LEDR : out std_logic_vector(0 downto 0)
+		LEDR : out std_logic_vector(2 downto 0)
 	 );
 end entity;
 
@@ -36,7 +36,9 @@ component Bloco_Controle
 		reset: in std_logic;
 		envia_sinal: out std_logic;
 		recebe_sinal: out std_logic;
-		resetDoContador: out std_logic
+		resetDoContador: out std_logic;
+		estado_recebe: out std_logic;
+		estado_envia: out std_logic
 	);
 end component;
 
@@ -46,6 +48,6 @@ begin
 
 	operativo: Bloco_Operativo port map(KEY(0),reset_cont_sig,CLOCK_50,recebe_sig,envia_sig,KEY(1),SW(0 downto 0),LEDR(0),recebeu_sig,cont2seg_sig);
 	
-	controle: bloco_Controle port map(CLOCK_50,KEY(0),recebeu_sig,cont2seg_sig,KEY(2),envia_sig,recebe_sig,reset_cont_sig);
+	controle: bloco_Controle port map(CLOCK_50,KEY(0),recebeu_sig,cont2seg_sig,KEY(2),envia_sig,recebe_sig,reset_cont_sig,LEDR(2),LEDR(1));
 
 end architecture;
