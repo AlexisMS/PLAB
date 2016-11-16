@@ -4,12 +4,22 @@ use ieee.std_logic_1164.all;
 --Estudantes: Alexis Mendes Sequeira e Guilherme Faria
 
 entity PLAB is
-	 port(
-		KEY : in std_logic_vector(2 downto 0);
-		CLOCK_50: in std_logic;
-		SW : in std_logic_vector(0 downto 0);
-		LEDR : out std_logic_vector(3 downto 0)
-	 );
+	generic (
+             data_width_write : positive := 1;
+				 data_width_read: positive := 5;
+             address_width : positive := 2
+             --<any other parameter needed>
+     );
+     port(
+            clock : in std_logic;
+            resetn : in std_logic;
+            reade: in std_logic;   -- active if reading from an address of the component
+--				write : in std_logic;   -- active if writing into an address of the component
+            address : in std_logic_vector(address_width-1 downto 0);   -- the address from it's reading or to were it's writing
+            writedata : in std_logic_vector(data_width_write-1 downto 0);  -- the data to be written
+            readdata : out std_logic_vector(data_width_read-1 downto 0)  -- the data readed
+            --<any other inputs or outputs that will not be connected to the bus>
+    );
 end entity;
 
 architecture arch of PLAB is
@@ -45,15 +55,32 @@ component Bloco_Controle
 	);
 end component;
 
-	signal key0_sig, key1_sig, key2_sig, recebe_sig, recebeu_sig, envia_sig, cont2seg_sig, reset_cont_sig : std_logic;
-	
+	signal recebe_sig, recebeu_sig, envia_sig, cont2seg_sig, reset_cont_sig : std_logic;
+	signal adress_sig: std_logic_vector(1 downto 0);
 begin
-	key0_sig <= not(KEY(0));
-	key1_sig <= not(KEY(1));
-	key2_sig <= not(KEY(2));
+	writedata(1) <= '0';
 	
-	operativo: Bloco_Operativo port map(key0_sig,reset_cont_sig,CLOCK_50,recebe_sig,envia_sig,key1_sig,SW(0 downto 0),LEDR(0),recebeu_sig,cont2seg_sig);
+	operativo: Bloco_Operativo port map(reade,
+													reset_cont_sig,
+													clock,
+													recebe_sig,
+													envia_sig,
+													--out_cont_freq_ir, --definir depois
+													writedata(0 downto 0),
+													readdata(0),
+													recebeu_sig,
+													cont2seg_sig);
 	
-	controle: bloco_Controle port map(CLOCK_50,key0_sig,recebeu_sig,cont2seg_sig,key2_sig,envia_sig,recebe_sig,reset_cont_sig,LEDR(2),LEDR(1),LEDR(3));
+	controle: bloco_Controle port map(clock,
+												reade,
+												recebeu_sig,
+												cont2seg_sig,
+												resetn,
+												envia_sig,
+												recebe_sig,
+												reset_cont_sig,
+												writedata(3),
+												writedata(2),
+												writedata(4));
 
 end architecture;
