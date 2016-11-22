@@ -8,7 +8,7 @@ entity Bloco_Operativo is
 		CLK : in std_logic;
 		recebe_sinal : in std_logic;
 		envia_sinal : in std_logic;
-		clk_ir : in std_logic;
+		clk_ir : in std_logic; --to do
 		in_ir : in std_logic_vector(0 downto 0);
 		out_ir : out std_logic;
 		recebeu : out std_logic;

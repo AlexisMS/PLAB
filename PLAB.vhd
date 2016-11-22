@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use IEEE.NUMERIC_STD.all;
 
 --Estudantes: Alexis Mendes Sequeira e Guilherme Faria
 
@@ -55,17 +56,32 @@ component Bloco_Controle
 	);
 end component;
 
-	signal recebe_sig, recebeu_sig, envia_sig, cont2seg_sig, reset_cont_sig : std_logic;
+component freq_div is
+	generic (
+				max_count : unsigned(23 downto 0) := X"BEBC20" -- 12 500 000 in hex, 2Hz
+				);
+	port (
+    clk_50Mhz : in  std_logic;
+    rst       : in  std_logic;
+    clk_out   : out std_logic);
+end component;
+
+	signal recebe_sig, recebeu_sig, envia_sig, cont2seg_sig, reset_cont_sig, clk_ir : std_logic;
 	signal adress_sig: std_logic_vector(1 downto 0);
 begin
-	writedata(1) <= '0';
+	readdata(1) <= '1';
+	
+	divisor: freq_div generic map (max_count => X"BEBC20")
+							port map(clock,
+										reset_cont_sig,
+										clk_ir);
 	
 	operativo: Bloco_Operativo port map(reade,
 													reset_cont_sig,
 													clock,
 													recebe_sig,
 													envia_sig,
-													--out_cont_freq_ir, --definir depois
+													clk_ir,
 													writedata(0 downto 0),
 													readdata(0),
 													recebeu_sig,
@@ -79,8 +95,8 @@ begin
 												envia_sig,
 												recebe_sig,
 												reset_cont_sig,
-												writedata(3),
-												writedata(2),
-												writedata(4));
+												readdata(3),
+												readdata(2),
+												readdata(4));
 
 end architecture;

@@ -5,8 +5,8 @@ entity Wrapper is
 	 port(
 		KEY : in std_logic_vector(1 downto 0);
 		CLOCK_50: in std_logic;
-		SW : in std_logic_vector(2 downto 0);
-		LEDR : out std_logic_vector(4 downto 0)
+		SW : in std_logic_vector(0 downto 0);
+		LEDR : out std_logic_vector(5 downto 0)
 	 );
 end entity;
 
@@ -35,11 +35,15 @@ architecture arch of Wrapper is
 begin
 	key0_sig <= not KEY(0);
 	key1_sig <= not KEY(1);
-	sistema: PLAB port map(	CLOCK_50,
+	LEDR(5) <= '1';
+	sistema: PLAB generic map(data_width_write => 1,
+									  data_width_read  => 5,
+									  address_width    => 1) 
+						port map(CLOCK_50,
 									key0_sig,
 									key1_sig,
-									SW(2 downto 1),
-									SW(0),
+									"0",
+									SW(0 downto 0),
 									LEDR(4 downto 0));
 end architecture;
 
