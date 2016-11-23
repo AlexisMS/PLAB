@@ -36,7 +36,8 @@ component Bloco_Operativo
 		in_ir : in std_logic_vector(0 downto 0);
 		out_ir : out std_logic;
 		recebeu : out std_logic;
-		cont2seg : out std_logic
+		cont2seg : out std_logic;
+		adress_in : in std_logic_vector(1 downto 0)
 	);
 end component;
 
@@ -85,7 +86,8 @@ begin
 													writedata(0 downto 0),
 													readdata(0),
 													recebeu_sig,
-													cont2seg_sig);
+													cont2seg_sig,
+													address);
 	
 	controle: bloco_Controle port map(clock,
 												reade,

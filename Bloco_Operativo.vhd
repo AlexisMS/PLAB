@@ -1,5 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
+--use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
+--use ieee.std_logic_unsigned.all;
 
 entity Bloco_Operativo is
 	port(
@@ -8,11 +11,12 @@ entity Bloco_Operativo is
 		CLK : in std_logic;
 		recebe_sinal : in std_logic;
 		envia_sinal : in std_logic;
-		clk_ir : in std_logic; --to do
+		clk_ir : in std_logic;
 		in_ir : in std_logic_vector(0 downto 0);
 		out_ir : out std_logic;
 		recebeu : out std_logic;
-		cont2seg : out std_logic
+		cont2seg : out std_logic;
+		adress_in : in std_logic_vector(1 downto 0)
 	);
 end entity;
 
@@ -47,15 +51,25 @@ component cont_adress
 end component;
 
 signal ram_out : std_logic_vector(0 downto 0);
-signal address_sig : std_logic_vector(5 downto 0);
+signal address_sig, adress_final: std_logic_vector(5 downto 0);
+signal adress_temp : std_logic_vector(5 downto 0) := (others => '0');
+signal temp : std_logic_vector(11 downto 0);
 
 begin
 	
+	adress_temp(1 downto 0) <= adress_in(1 downto 0);	
+	
 	cont1: cont_adress port map ( clk_ir, reset_contador, address_sig(5 downto 0), recebeu);
+	
+	--y <= "010000";
+	--x <= std_logic_vector( signed(adress_temp) * signed(y) );
+	temp <= std_logic_vector( signed(address_sig) + ( signed(adress_temp) * "010000"));	
+	--adress_final <= address_sig + (adress_temp * x);
+	adress_final <= temp(5 downto 0);
 	
 	cont2: Contador port map ( btn, CLK, cont2seg);
 
-	RAM_inst: RAM_1 port map (address_sig(5 downto 0), clk_ir, in_ir(0 downto 0), recebe_sinal, ram_out(0 downto 0));
+	RAM_inst: RAM_1 port map (adress_final(5 downto 0), clk_ir, in_ir(0 downto 0), recebe_sinal, ram_out(0 downto 0));
 		
 	out_ir <= (ram_out(0) and envia_sinal);
 

@@ -4,7 +4,7 @@ use IEEE.NUMERIC_STD.all;
 
 entity freq_div is
 	generic (
-				max_count : unsigned(23 downto 0) := X"BEBC20" -- 12 500 000 in hex, 2Hz
+				max_count : unsigned(23 downto 0) := X"5f5e10" -- BEBC20 12 500 000 in hex, 2Hz || 5f5e10 for 4Hz
 				);
 	port (
     clk_50Mhz : in  std_logic;
