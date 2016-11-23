@@ -24,10 +24,10 @@ begin
 		if RST = '1' then
 			contador <= "000000";
 			pronto <= '0';
-		elsif entrada'event and entrada = '1' and contador < "000111" then
+		elsif entrada'event and entrada = '1' and contador < "010000" then
 			contador <= contador + 1;
 			pronto <= '0';
-		elsif entrada'event and entrada = '1' and contador > "000110" then
+		elsif entrada'event and entrada = '1' and contador > "001111" then
 			contador <= contador;
 			pronto <= '1';
 		else
